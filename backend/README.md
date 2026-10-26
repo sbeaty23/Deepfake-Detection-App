@@ -1,6 +1,6 @@
 ## Prerequisites
 
-Python 3.10 or newer
+Python 3.10 or newer,
 Node.js and npm
 
 # Backend Setup
