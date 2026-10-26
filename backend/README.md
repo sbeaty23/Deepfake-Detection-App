@@ -1,14 +1,16 @@
-##Prerequisites
+## Prerequisites
 
-Python 3.10 or newer
+Python 3.10 or newer,
 Node.js and npm
 
-#Backend Setup
+# Backend Setup
 
-Install the backend dependencies:
+Install the backend dependencies in a virtual environment:
 
 > cd backend
-> python -m pip install -r requirements.txt
+
+
+> pip install -r requirements.txt
 
 Start the API:
 
@@ -18,7 +20,7 @@ The API should run at http://127.0.0.1:8000.
 
 Interactive API documentation is available at http://127.0.0.1:8000/docs.
 
-#Running the Application
+# Running the Application
 
 Keep both the frontend and backend running in separate terminals.
 
