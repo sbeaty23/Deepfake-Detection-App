@@ -5,7 +5,7 @@ Node.js and npm
 
 # Backend Setup
 
-Install the backend dependencies:
+Install the backend dependencies in a virtual environment:
 
 > cd backend
 > python -m pip install -r requirements.txt
