@@ -8,7 +8,8 @@ Node.js and npm
 Install the backend dependencies in a virtual environment:
 
 > cd backend
-and
+
+
 > pip install -r requirements.txt
 
 Start the API:
