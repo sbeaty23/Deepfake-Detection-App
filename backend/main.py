@@ -47,7 +47,7 @@ async def analyze_image(image: UploadFile = File(...)):
 
     try:
         with Image.open(BytesIO(image_bytes)) as img:
-            if img.format not in {"JPEG", "PNG", "WEBP"}:
+            if img.format not in {"JPEG", "MPO", "PNG", "WEBP"}:
                 raise HTTPException(
                     status_code=400,
                     detail="Unsupported image format."
