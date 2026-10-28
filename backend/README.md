@@ -7,6 +7,18 @@ Node.js and npm
 
 Install the backend dependencies in a virtual environment:
 
+How to set up a virtual Environment (Only do this once)
+> python -m venv .venv
+
+
+On Windows (how to activate)
+>.venv\Scripts\Activate.ps1
+
+
+On Mac
+> source .venv/bin/activate
+
+How to run:
 > cd backend
 
 
