@@ -14,6 +14,9 @@ function App() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [result, setResult] = useState<string | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   useEffect(() => {
     console.log("It works!");
 
@@ -54,6 +57,51 @@ function App() {
     setPreviewUrl(null);
     setSelectedFile(null);
   }
+
+  //Function that connects to the backeend
+  async function handleAnalyze() {
+    if (!selectedFile) {
+      setError("Please upload an image first.");
+      return;
+    }
+
+    setIsAnalyzing(true);
+    setError(null);
+    setResult(null);
+
+    // Prepare the selected file for the Python backend
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/analyze",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || "Image upload failed."
+        );
+      }
+
+      setResult(data.message);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not connect to the backend."
+      );
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }
+
   return (
       <main>
         <h1>Deepfake Detection App</h1>
@@ -67,6 +115,23 @@ function App() {
         />
         {previewUrl && (
           <img src={previewUrl} alt="Selected image" />
+        )}
+
+        {/*Analyzye button*/}
+        {selectedFile && (
+          <button
+            type="button"
+            onClick={handleAnalyze}
+            disabled={isAnalyzing}
+          >
+            {isAnalyzing ? "Uploading..." : "Analyze Image"}
+          </button>
+        )}
+
+        {result && (
+          <p style={{ color: "green" }} role="status">
+            {result}
+          </p>
         )}
         {error && <p role="alert">{error}</p>}
       </main>
