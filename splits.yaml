@@ -1,0 +1,8 @@
+seed: 1337
+heldout_families: [dit_flow]          # whole family never seen in training
+heldout_generators: [sd-2.1]          # unseen member of a seen family
+temporal_cutoff: "2025-01-01"         # generators released on/after this -> test_temporal
+real_ood_sources: [own_capture]       # reals never used for training
+val_fraction: 0.10
+test_in_family_fraction: 0.10
+real_heldout_fraction: 0.15           # reals reserved to pair with held-out fake splits
