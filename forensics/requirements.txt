@@ -1,0 +1,12 @@
+pandas
+pyarrow
+numpy
+pillow
+imagehash
+pyyaml
+# optional, only for embedding-based dedup / identity clustering:
+# torch
+# transformers        # DINOv2
+# insightface         # ArcFace
+# onnxruntime
+# faiss-cpu
