@@ -1,0 +1,37 @@
+# One entry per source. `fields` are constant columns applied to every image in the source.
+# `sidecar` (optional) is a CSV with a `path` column (relative to root) plus per-image
+# columns: seed, prompt, source_owner_id, parent_path, license_spdx, release_date, ...
+sources:
+  - name: ffhq
+    root: /data/ffhq/images1024x1024
+    sidecar: /data/ffhq/ffhq_sidecar.csv   # build from ffhq-dataset-v1.json: owner, per-image license
+    fields:
+      label: real
+      label_confidence: verified
+      consent_basis: public_license
+      license_tier: B            # per-image license in sidecar decides BY vs BY-NC (tier C)
+
+  - name: own_capture
+    root: /data/own_capture
+    fields: {label: real, label_confidence: verified, consent_basis: consented,
+             license_spdx: LicenseRef-own, license_tier: A, commercial_train_ok: true}
+
+  - name: gen_stylegan2
+    root: /data/gen/stylegan2
+    fields: {label: synthetic, label_confidence: verified, generator_id: stylegan2-ffhq,
+             generator_family: gan_style, base_model_id: stylegan2, release_date: "2019-12-01",
+             gen_method: unconditional}
+
+  - name: gen_sdxl
+    root: /data/gen/sdxl
+    sidecar: /data/gen/sdxl/meta.csv       # seed,prompt per image
+    fields: {label: synthetic, label_confidence: verified, generator_id: sdxl-1.0,
+             generator_family: ldm_unet, base_model_id: sdxl-1.0, release_date: "2023-07-26",
+             gen_method: t2i}
+
+  - name: gen_flux
+    root: /data/gen/flux
+    sidecar: /data/gen/flux/meta.csv
+    fields: {label: synthetic, label_confidence: verified, generator_id: flux1-dev,
+             generator_family: dit_flow, base_model_id: flux1, release_date: "2024-08-01",
+             gen_method: t2i}

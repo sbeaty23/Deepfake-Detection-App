@@ -1,75 +1,48 @@
-# React + TypeScript + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend is a small React application written in TypeScript and built with Vite. It currently provides an image upload screen with client-side validation and a local preview. It does not yet send images to the backend or run a deepfake detection model.
 
-Currently, two official plugins are available:
+## How the code runs
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+`index.html` provides the page shell and the `#root` element. Vite serves this page during development and bundles it for production. The entry point, [`src/main.tsx`](src/main.tsx), imports the global stylesheet and mounts the React application inside `StrictMode`. It renders [`src/App.tsx`](src/App.tsx), which contains the current upload experience.
 
-## React Compiler
+The `App` component keeps three pieces of state:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `selectedFile`: the accepted `File` object. It is saved for future use, but currently is not submitted anywhere.
+- `previewUrl`: a temporary browser object URL used to display the uploaded image.
+- `error`: a validation message shown to the user with `role="alert"`.
 
-## Expanding the ESLint configuration
+When the file input changes, `handleFileChange` checks the first selected file. Only JPEG, PNG, and WebP images up to 5 MiB are accepted. On success, the component clears any old error, saves the file, and creates an object URL for the preview. On failure, `handleError` clears both the selected file and preview and sets an explanatory message. A `useEffect` cleanup revokes the current object URL when it changes or the component unmounts, releasing the browser-held resource.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+The page displays a heading, brief instructions, a native file picker, and—when valid input is selected—an `<img>` preview. The `accept` attribute guides the picker, while the handler performs the actual checks.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Source layout
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `src/main.tsx` — React mount point and global CSS import.
+- `src/App.tsx` — upload UI, state, validation, and preview lifecycle.
+- `src/index.css` — global typography, color variables, page layout, and light/dark color scheme.
+- `src/App.css` — component-level styles. Some rules are leftover starter-template styles and are not used by the current upload screen.
+- `public/` — static assets served from the site root.
+- `vite.config.ts` — enables Vite's React plugin.
+- `tsconfig*.json` — TypeScript compiler settings for the app and build tooling.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Development commands
 
+Run these from the `frontend` directory:
+
+```sh
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Vite prints the local development URL in the terminal and supports hot module replacement. Other available scripts are:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```sh
+npm run build    # type-check and create the production bundle in dist/
+npm run preview  # serve the production bundle locally
+npm run lint     # run ESLint
 ```
+
+## Current scope and next integration point
+
+This is currently a browser-only upload and preview flow. There is no API client, request state, result view, or backend URL configuration in the frontend yet. The accepted `selectedFile` is the natural input for a future upload request; that integration can add request progress, API error handling, and a detection result to `App` or move those responsibilities into dedicated components/hooks as the UI grows.
